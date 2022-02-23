@@ -1,0 +1,127 @@
+package selenium_project;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.AfterSuite;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.Test;
+
+public class testcase {
+		String driverpath= "C:\\selenium webdriver\\chromedriver_win32\\chromedriver.exe";
+	
+		public ChromeDriver driver;
+		@BeforeSuite
+		public void fnInitialization() {
+			System.setProperty("webdriver.chrome.driver",driverpath);
+			driver = new ChromeDriver();
+			
+		}
+		@Test(priority=1)
+		public void fnMaximize(){
+			driver.manage().window().maximize();
+		}
+		@Test(priority=2)
+		public void fnIrctclogin() {
+			driver.get("https://www.irctc.co.in/nget/train-search");
+			WebElement alert = driver.findElement(By.xpath("//div[@class='col-xs-12 text-center']"));
+			highlightermethod(driver,alert);
+			WebElement submit = driver.findElement(By.xpath("//button[@class='btn btn-primary']"));
+			submit.click();
+			
+			
+		}
+		@Test(priority=3)
+		public void fnSearchtrainavailability() throws InterruptedException {
+			WebElement searchbox = driver.findElement(By.xpath("//input[@class='ng-tns-c58-8 ui-inputtext ui-widget ui-state-default ui-corner-all ui-autocomplete-input ng-star-inserted']"));
+			searchbox.click();
+			Thread.sleep(2000);
+			try{
+				WebElement login = driver.findElement(By.xpath("//*[@id=\"login_header_disable\"]/div/div/div[2]/a"));
+				login.click();
+				System.out.println("pre-request site login popup appeared");
+				
+			}
+			catch (Exception e){
+				System.out.println("pre-request site popup is not appeared");
+				
+			}
+			searchbox.sendKeys("DADAR - DR");
+			WebElement searchbox1 = driver.findElement(By.xpath("//input[@class='ng-tns-c58-9 ui-inputtext ui-widget ui-state-default ui-corner-all ui-autocomplete-input ng-star-inserted']"));
+			searchbox1.sendKeys("CHENNAI EGMORE - MS");
+			
+		}
+		@Test(priority=4)
+		public void fnInvaidtraindate() throws InterruptedException {
+			WebElement textbox = driver.findElement(By.xpath("//input[@class='ng-tns-c59-10 ui-inputtext ui-widget ui-state-default ui-corner-all ng-star-inserted']"));
+			textbox.click();
+			WebElement leftbutton = driver.findElement(By.xpath("//span[@class='ui-datepicker-prev-icon pi pi-chevron-left ng-tns-c59-10']"));
+			leftbutton.click();
+			WebElement date1 = driver.findElement(By.xpath("//*[@id=\"jDate\"]/span/div/div/div[2]/table/tbody/tr[3]/td[4]"));
+			date1.click();
+			String colour_value="rgba(51, 51, 51, 1)";
+			try {
+				String colour_code = date1.getCssValue("color");
+				if(colour_code.equals(colour_value)) {
+					System.out.println("prev month calender is disabled mode");
+				}
+			}
+			catch(Exception e) {
+				System.out.println("previous month calender is not disable mode");
+			}
+			Thread.sleep(2000);
+		}
+		@Test(priority=5)
+		public void fnVerifyvalidtrainDate() throws InterruptedException {
+			WebElement textbox = driver.findElement(By.xpath("//input[@class='ng-tns-c59-10 ui-inputtext ui-widget ui-state-default ui-corner-all ng-star-inserted']"));
+			textbox.click();
+			WebElement nextbutton = driver.findElement(By.xpath("//span[@class='ui-datepicker-next-icon pi pi-chevron-right ng-tns-c59-10']"));
+			nextbutton.click();
+			Thread.sleep(1000);
+			WebElement nextbutton1 = driver.findElement(By.xpath("//span[@class='ui-datepicker-next-icon pi pi-chevron-right ng-tns-c59-10']"));
+			nextbutton1.click();
+			WebElement date = driver.findElement(By.xpath("//a[contains(text(),'30')]"));
+			date.click();
+		}
+		@Test(priority=6)
+		public void fnVerify_booking_details() throws InterruptedException {
+			WebElement dropdown1 = driver.findElement(By.xpath("//span[text()='All Classes']"));
+			dropdown1.click();
+			WebElement generic = driver.findElement(By.xpath("//span[text()='AC 2 Tier (2A)']"));
+			generic.click();
+			WebElement dropdown2 = driver.findElement(By.xpath("//span[text()='GENERAL']"));
+			dropdown2.click();
+			WebElement option = driver.findElement(By.xpath("//span[text()='LADIES']"));
+			option.click();
+			WebElement label_box = driver.findElement(By.cssSelector("label[for='availableBerth']"));
+			label_box.click();
+			WebElement search = driver.findElement(By.xpath("//button[@class='search_btn train_Search']"));
+			search.click();
+			Thread.sleep(1000);
+			WebElement trains = driver.findElement(By.xpath("//span[text()='Show Available Trains']"));
+			trains.click();
+			
+			WebElement result = driver.findElement(By.xpath("//div[@class='hidden-xs']"));
+			String Txt= result.getText();
+			Thread.sleep(4000);
+			System.out.println(Txt);
+		}
+		
+		@Test(priority=7)
+		public void fnPrint() {
+			System.out.println("Testcases is passed");
+		}
+		@AfterSuite
+		public void fnClosebrowser() {
+			driver.close();
+		}
+
+		private static void highlightermethod(WebDriver driver, WebElement alert) {
+			JavascriptExecutor js = (JavascriptExecutor) driver;
+			js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", alert);
+				
+		}
+
+}
